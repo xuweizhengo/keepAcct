@@ -1,0 +1,99 @@
+# Flutter build outputs
+build/
+.dart_tool/
+.packages
+.pub/
+pubspec.lock
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Android
+android/app/debug/
+android/app/profile/
+android/app/release/
+android/.gradle/
+android/app/build/
+android/local.properties
+android/key.properties
+android/gradle.properties.bak
+*.keystore
+
+# iOS
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+ios/Flutter/app.flx
+ios/Flutter/app.zip
+ios/Flutter/flutter_assets/
+ios/ServiceDefinitions.json
+ios/Runner/GeneratedPluginRegistrant.*
+ios/Pods/
+ios/.symlinks/
+ios/DerivedData/
+
+# Web
+web/.dart_tool/
+web/build/
+
+# Windows
+windows/flutter/
+
+# macOS
+macos/Flutter/
+
+# Linux
+linux/flutter/
+
+# Coverage
+coverage/
+
+# Logs
+*.log
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Offline build packages
+flutter_build_package/
+flutter_complete_offline_package.*
+web_demo/
+
+# Test related
+test-*.md
+mobile-test-*.md
+*.md
+!README.md
