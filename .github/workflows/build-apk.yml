@@ -28,6 +28,15 @@ jobs:
         channel: 'stable'
         cache: true
         
+    - name: Fix local.properties
+      run: |
+        cd flutter_app/android
+        echo "sdk.dir=$ANDROID_HOME" > local.properties
+        echo "flutter.sdk=$FLUTTER_ROOT" >> local.properties
+        echo "flutter.buildMode=release" >> local.properties
+        echo "flutter.versionName=1.0.0" >> local.properties
+        echo "flutter.versionCode=1" >> local.properties
+        
     - name: Get dependencies
       run: |
         cd flutter_app

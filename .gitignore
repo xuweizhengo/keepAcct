@@ -31,6 +31,7 @@ android/app/build/
 android/local.properties
 android/key.properties
 android/gradle.properties.bak
+flutter_app/android/local.properties
 *.keystore
 
 # iOS
