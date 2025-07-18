@@ -1,0 +1,9 @@
+<!-- This file is used by Flutter to determine the Android embedding version -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <!-- This meta-data tag is required to use Flutter embedding v2 -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+    </application>
+</manifest>
