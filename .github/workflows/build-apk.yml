@@ -28,7 +28,7 @@ jobs:
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.19.0'
+        flutter-version: '3.22.0'
         channel: 'stable'
         cache: true
         
@@ -46,6 +46,12 @@ jobs:
         cd flutter_app
         flutter clean
         flutter pub get
+        
+    - name: Check dependencies and permissions
+      run: |
+        cd flutter_app
+        flutter doctor -v
+        cat pubspec.yaml | grep -A 20 "dependencies:"
         
     - name: Build APK
       run: |
