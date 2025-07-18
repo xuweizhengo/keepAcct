@@ -87,11 +87,22 @@ class AppProvider extends ChangeNotifier {
       _error = null;
       notifyListeners();
       
-      // Convert audio to text
-      final text = await _audioService.speechToText(audioPath);
+      String? text;
+      
+      // If audioPath is 'live_recognition', use live speech recognition
+      if (audioPath == 'live_recognition') {
+        text = await _audioService.startLiveSpeechRecognition();
+      } else {
+        // Convert audio file to text
+        text = await _audioService.speechToText(audioPath);
+      }
+      
+      if (text == null || text.isEmpty) {
+        throw Exception('未能识别语音内容');
+      }
       
       // Process with AI
-      final result = await _aiService.processText(text ?? '');
+      final result = await _aiService.processText(text);
       
       // Create expense record
       final record = ExpenseRecord(
@@ -101,7 +112,7 @@ class AppProvider extends ChangeNotifier {
         category: result?['category'] ?? 'Other',
         timestamp: DateTime.now(),
         inputType: 'audio',
-        audioPath: audioPath,
+        audioPath: audioPath == 'live_recognition' ? null : audioPath,
         transcription: text,
         aiResult: result,
       );

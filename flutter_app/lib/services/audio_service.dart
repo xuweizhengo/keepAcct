@@ -1,53 +1,117 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:permission_handler/permission_handler.dart';
 
 class AudioService {
+  final stt.SpeechToText _speechToText = stt.SpeechToText();
   bool _isRecording = false;
   bool _isPlaying = false;
+  bool _speechEnabled = false;
+  String _lastWords = '';
   
   bool get isRecording => _isRecording;
   bool get isPlaying => _isPlaying;
+  bool get speechEnabled => _speechEnabled;
+  String get lastWords => _lastWords;
   
   Future<bool> requestMicrophonePermission() async {
-    // Placeholder - permission not available in simplified version
-    return true;
+    final status = await Permission.microphone.request();
+    return status.isGranted;
+  }
+  
+  Future<void> initializeSpeech() async {
+    try {
+      _speechEnabled = await _speechToText.initialize(
+        onError: (error) {
+          print('Speech recognition error: $error');
+        },
+        onStatus: (status) {
+          print('Speech recognition status: $status');
+        },
+      );
+    } catch (e) {
+      print('Error initializing speech: $e');
+      _speechEnabled = false;
+    }
   }
   
   Future<void> startRecording() async {
-    // Placeholder - recording not available in simplified version
     _isRecording = true;
+    // This is a placeholder for actual audio recording
+    // In a real implementation, you'd use audio recording packages
   }
   
   Future<String?> stopRecording() async {
-    // Placeholder - recording not available in simplified version
     _isRecording = false;
+    // This is a placeholder for actual audio recording
+    // In a real implementation, you'd return the recorded audio file path
     return null;
   }
   
   Future<void> playAudio(String path) async {
-    // Placeholder - audio playback not available in simplified version
     _isPlaying = true;
     await Future.delayed(Duration(seconds: 1));
     _isPlaying = false;
   }
   
   Future<void> stopPlaying() async {
-    // Placeholder - audio playback not available in simplified version
     _isPlaying = false;
   }
   
   Future<String?> speechToText(String audioPath) async {
-    // Placeholder - speech recognition not available in simplified version
-    return "演示文本";
+    // This is a placeholder for converting recorded audio to text
+    // In a real implementation, you'd process the audio file
+    return "转换的文本内容";
   }
   
   Future<String?> startLiveSpeechRecognition() async {
-    // Placeholder - live speech recognition not available in simplified version
-    await Future.delayed(Duration(seconds: 2));
-    return "实时语音识别演示文本";
+    try {
+      if (!_speechEnabled) {
+        await initializeSpeech();
+      }
+      
+      if (!_speechEnabled) {
+        throw Exception('语音识别未初始化');
+      }
+      
+      if (!await requestMicrophonePermission()) {
+        throw Exception('麦克风权限被拒绝');
+      }
+      
+      _lastWords = '';
+      
+      await _speechToText.listen(
+        onResult: (result) {
+          _lastWords = result.recognizedWords;
+        },
+        listenFor: Duration(seconds: 30),
+        pauseFor: Duration(seconds: 3),
+        partialResults: true,
+        localeId: 'zh_CN', // Chinese language
+        cancelOnError: true,
+        listenMode: stt.ListenMode.confirmation,
+      );
+      
+      // Wait for the speech recognition to complete
+      while (_speechToText.isListening) {
+        await Future.delayed(Duration(milliseconds: 100));
+      }
+      
+      return _lastWords.isNotEmpty ? _lastWords : null;
+    } catch (e) {
+      print('Error during live speech recognition: $e');
+      throw e;
+    }
+  }
+  
+  Future<void> stopListening() async {
+    if (_speechToText.isListening) {
+      await _speechToText.stop();
+    }
   }
   
   void dispose() {
-    // Cleanup
+    _speechToText.stop();
   }
 }

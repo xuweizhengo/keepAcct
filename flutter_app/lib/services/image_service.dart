@@ -1,20 +1,84 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ImageService {
+  final ImagePicker _picker = ImagePicker();
+  
   Future<String?> pickImageFromCamera() async {
-    // Placeholder - camera not available in simplified version
-    return null;
+    try {
+      // Request camera permission
+      if (await _requestCameraPermission()) {
+        final XFile? image = await _picker.pickImage(
+          source: ImageSource.camera,
+          maxWidth: 1024,
+          maxHeight: 1024,
+          imageQuality: 85,
+        );
+        
+        if (image != null) {
+          return image.path;
+        }
+      }
+      return null;
+    } catch (e) {
+      print('Error picking image from camera: $e');
+      return null;
+    }
   }
   
   Future<String?> pickImageFromGallery() async {
-    // Placeholder - gallery not available in simplified version
-    return null;
+    try {
+      // Request storage permission
+      if (await _requestStoragePermission()) {
+        final XFile? image = await _picker.pickImage(
+          source: ImageSource.gallery,
+          maxWidth: 1024,
+          maxHeight: 1024,
+          imageQuality: 85,
+        );
+        
+        if (image != null) {
+          return image.path;
+        }
+      }
+      return null;
+    } catch (e) {
+      print('Error picking image from gallery: $e');
+      return null;
+    }
   }
   
   Future<List<String>> pickMultipleImages() async {
-    // Placeholder - multiple images not available in simplified version
-    return [];
+    try {
+      if (await _requestStoragePermission()) {
+        final List<XFile> images = await _picker.pickMultiImage(
+          maxWidth: 1024,
+          maxHeight: 1024,
+          imageQuality: 85,
+        );
+        
+        return images.map((image) => image.path).toList();
+      }
+      return [];
+    } catch (e) {
+      print('Error picking multiple images: $e');
+      return [];
+    }
+  }
+  
+  Future<bool> _requestCameraPermission() async {
+    final status = await Permission.camera.request();
+    return status.isGranted;
+  }
+  
+  Future<bool> _requestStoragePermission() async {
+    if (Platform.isAndroid) {
+      final status = await Permission.storage.request();
+      return status.isGranted;
+    }
+    return true; // iOS doesn't need explicit storage permission for gallery
   }
   
   Future<void> showImagePickerDialog(
