@@ -93,6 +93,13 @@ flutter_build_package/
 flutter_complete_offline_package.*
 web_demo/
 
+# Large binary files
+*.tar.gz
+*.bundle
+*.zip
+flutter_app/flutter/
+android/gradle-*/
+
 # Test related
 test-*.md
 mobile-test-*.md
